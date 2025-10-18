@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { Logger } from '@nestjs/common';
+import { AllExceptionsFilter } from './common/filters/rpc-exception.filter';
 
 async function bootstrap() {
   const logger = new Logger('Main');
@@ -15,6 +16,9 @@ async function bootstrap() {
       },
     },
   );
+
+  app.useGlobalFilters(new AllExceptionsFilter());
+
   await app.listen();
 
   logger.log('Products Microservice is running...');

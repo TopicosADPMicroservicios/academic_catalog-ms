@@ -9,16 +9,67 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  price       Float
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  isActive    Boolean  @default(true)
+model Nivel {
+  id        String    @id @default(uuid())
+  semestre  Int
+  materias  Materia[]
+  isActive  Boolean   @default(true)
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+}
+
+model Carrera {
+  id            String          @id @default(uuid())
+  codigo        Int             @unique
+  nombre        String          @unique
+  isActive      Boolean         @default(true)
+  updatedAt     DateTime        @updatedAt
+  createdAt     DateTime        @default(now())
+  planesEstudio PlanDeEstudio[]
+}
+
+model PlanDeEstudio {
+  id        String    @id @default(uuid())
+  version   Int
+  carreraId String
+  materias  Materia[]
+  carrera   Carrera   @relation(fields: [carreraId], references: [id])
+  isActive  Boolean   @default(true)
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+}
+
+model Materia {
+  id                String         @id @default(uuid())
+  sigla             String         @unique
+  nombre            String
+  creditos          Int
+  esElectiva        Boolean        @default(false)
+  isActive          Boolean        @default(true)
+  nivelId           String
+  nivel             Nivel          @relation(fields: [nivelId], references: [id])
+  planDeEstudioId   String
+  planDeEstudio     PlanDeEstudio  @relation(fields: [planDeEstudioId], references: [id])
+  siglaMateria      Prerequisito[] @relation("MateriaRequiere")
+  siglaPrerequisito Prerequisito[] @relation("EsRequisitoDe")
+  updatedAt         DateTime       @updatedAt
+  createdAt         DateTime       @default(now())
+}
+
+model Prerequisito {
+  id                String  @id @default(uuid())
+  siglaMateria      String  @map("siglaMateria")
+  siglaPrerequisito String  @map("siglaPrerequisito")
+  materia           Materia @relation("MateriaRequiere", fields: [siglaMateria], references: [id])
+  prerequisito      Materia @relation("EsRequisitoDe", fields: [siglaPrerequisito], references: [id])
+
+  isActive  Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@unique([siglaMateria, siglaPrerequisito])
 }
