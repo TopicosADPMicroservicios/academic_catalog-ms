@@ -73,3 +73,24 @@ model Prerequisito {
 
   @@unique([siglaMateria, siglaPrerequisito])
 }
+
+model MaestroDeOferta {
+  id           String   @id @default(uuid())
+  periodoId    String
+  estudianteId String
+  isActive     Boolean  @default(true)
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+}
+
+model OfertaGrupoMateria {
+  id                String   @id @default(uuid())
+  grupoMateriaId    String
+  maestroDeOfertaId String
+  estaInscrita      Boolean  @default(false)
+  isActive          Boolean  @default(true)
+  updatedAt         DateTime @updatedAt
+  createdAt         DateTime @default(now())
+
+  @@unique([grupoMateriaId, maestroDeOfertaId])
+}

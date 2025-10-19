@@ -21,6 +21,6 @@ async function bootstrap() {
 
   await app.listen();
 
-  logger.log('Products Microservice is running...');
+  logger.log('Academic Catalog Microservice is running...');
 }
 bootstrap();
