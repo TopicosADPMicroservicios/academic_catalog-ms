@@ -26,16 +26,6 @@ export class OfertasGrupoMateriaService {
     return createdOfertaGrupoMateria;
   }
 
-  async findAll(): Promise<OfertaGrupoMateria[]> {
-    const foundOfertasGrupoMateria =
-      await this.prismaService.ofertaGrupoMateria.findMany({
-        where: { isActive: true },
-      });
-    if (!foundOfertasGrupoMateria)
-      throw new NotFoundException('No se encontraron ofertas grupo materia');
-    return foundOfertasGrupoMateria;
-  }
-
   async findOne(id: string): Promise<OfertaGrupoMateria> {
     const foundOfertaGrupoMateria =
       await this.prismaService.ofertaGrupoMateria.findUnique({
@@ -73,5 +63,52 @@ export class OfertasGrupoMateriaService {
         `No se pudo eliminar la oferta grupo materia`,
       );
     return deletedOfertaGrupoMateria;
+  }
+
+  //PARA EL SERVICIO COMPLETO DE INSCRIPCIONES
+  async findAll(ofertaId: string[]): Promise<OfertaGrupoMateria[]> {
+    const foundOfertasGrupoMateria =
+      await this.prismaService.ofertaGrupoMateria.findMany({
+        where: { isActive: true, id: { in: ofertaId } },
+      });
+    if (!foundOfertasGrupoMateria)
+      throw new NotFoundException('No se encontraron ofertas grupo materia');
+    return foundOfertasGrupoMateria;
+  }
+
+  async findByMaestroId(
+    maestroDeOfertaId: string,
+  ): Promise<OfertaGrupoMateria[]> {
+    const foundOfertasGrupoMateria =
+      await this.prismaService.ofertaGrupoMateria.findMany({
+        where: {
+          isActive: true,
+          maestroDeOfertaId: maestroDeOfertaId,
+        },
+      });
+    if (!foundOfertasGrupoMateria)
+      throw new NotFoundException(
+        'No se encontraron ofertas grupo materia para la boleta proporcionada',
+      );
+    return foundOfertasGrupoMateria;
+  }
+
+  async marcarInscritas(ofertaId: string[]): Promise<OfertaGrupoMateria[]> {
+    const updatedOfertaGrupoMateria =
+      await this.prismaService.ofertaGrupoMateria.updateMany({
+        where: { id: { in: ofertaId }, isActive: true },
+        data: { estaInscrita: true },
+      });
+    if (updatedOfertaGrupoMateria.count === 0)
+      throw new NotFoundException(
+        'No se pudieron marcar las ofertas grupo materia como inscritas',
+      );
+
+    const ofertasMarcadas =
+      await this.prismaService.ofertaGrupoMateria.findMany({
+        where: { id: { in: ofertaId }, isActive: true },
+      });
+
+    return ofertasMarcadas;
   }
 }

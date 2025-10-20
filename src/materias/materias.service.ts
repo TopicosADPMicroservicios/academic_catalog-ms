@@ -20,15 +20,6 @@ export class MateriasService {
     return createdMateria;
   }
 
-  async findAll(): Promise<Materia[]> {
-    const foundMaterias = await this.prismaService.materia.findMany({
-      where: { isActive: true },
-    });
-    if (!foundMaterias)
-      throw new NotFoundException('No se encontraron materias');
-    return foundMaterias;
-  }
-
   async findOne(id: string): Promise<Materia> {
     const materia = await this.prismaService.materia.findUnique({
       where: { id, isActive: true },
@@ -58,5 +49,15 @@ export class MateriasService {
     if (!deletedMateria)
       throw new NotFoundException('No se encontró la materia');
     return deletedMateria;
+  }
+
+  //PARA EL SERVICIO DE INSCRIPCIONES
+  async findAll(grupoMateriaId: string[]): Promise<Materia[]> {
+    const foundMaterias = await this.prismaService.materia.findMany({
+      where: { isActive: true, id: { in: grupoMateriaId } },
+    });
+    if (!foundMaterias)
+      throw new NotFoundException('No se encontraron materias');
+    return foundMaterias;
   }
 }

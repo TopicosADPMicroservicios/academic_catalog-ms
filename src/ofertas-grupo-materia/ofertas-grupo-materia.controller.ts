@@ -17,11 +17,6 @@ export class OfertasGrupoMateriaController {
     return this.ofertasGrupoMateriaService.create(createOfertasGrupoMateriaDto);
   }
 
-  @MessagePattern({ cmd: 'find_all_ofertas_grupo_materia' })
-  findAll() {
-    return this.ofertasGrupoMateriaService.findAll();
-  }
-
   @MessagePattern({ cmd: 'find_one_oferta_grupo_materia' })
   findOne(@Payload() id: string) {
     return this.ofertasGrupoMateriaService.findOne(id);
@@ -40,5 +35,21 @@ export class OfertasGrupoMateriaController {
   @MessagePattern({ cmd: 'delete_oferta_grupo_materia' })
   remove(@Payload() id: string) {
     return this.ofertasGrupoMateriaService.remove(id);
+  }
+
+  //INSCRIPCIONES
+  @MessagePattern({ cmd: 'find_all_ofertas_grupo_materia' })
+  findAll(@Payload() ofertaId: string[]) {
+    return this.ofertasGrupoMateriaService.findAll(ofertaId);
+  }
+
+  @MessagePattern({ cmd: 'find_all_by_maestro_id' })
+  findByMaestroId(@Payload() maestroDeOfertaId: string) {
+    return this.ofertasGrupoMateriaService.findByMaestroId(maestroDeOfertaId);
+  }
+
+  @MessagePattern({ cmd: 'marcar_inscritas' })
+  marcarInscritas(@Payload() ofertaId: string[]) {
+    return this.ofertasGrupoMateriaService.marcarInscritas(ofertaId);
   }
 }

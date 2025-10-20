@@ -13,11 +13,6 @@ export class MateriasController {
     return this.materiasService.create(createMateriaDto);
   }
 
-  @MessagePattern({ cmd: 'find_all_materias' })
-  findAll() {
-    return this.materiasService.findAll();
-  }
-
   @MessagePattern({ cmd: 'find_one_materia' })
   findOne(@Payload() id: string) {
     return this.materiasService.findOne(id);
@@ -31,5 +26,11 @@ export class MateriasController {
   @MessagePattern({ cmd: 'delete_materia' })
   remove(@Payload() id: string) {
     return this.materiasService.remove(id);
+  }
+
+  //SERVCICIO PARA INSCRIPCIONES
+  @MessagePattern({ cmd: 'find_all_materias' })
+  findAll(@Payload() grupoMateriaId: string[]) {
+    return this.materiasService.findAll(grupoMateriaId);
   }
 }
