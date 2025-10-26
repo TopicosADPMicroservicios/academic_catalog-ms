@@ -1,0 +1,21 @@
+# Simple Dockerfile for quick updates
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Create non-root user for security
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nestjs -u 1001
+
+# Copy everything
+COPY --chown=nestjs:nodejs . .
+
+# Install dependencies and build
+RUN npm ci && npm run build
+
+# Switch to non-root user
+USER nestjs
+
+EXPOSE 3001 4001
+
+CMD ["node", "dist/main.js"]

@@ -37,4 +37,10 @@ export class MaestrosDeOfertaController {
   remove(@Payload() id: string) {
     return this.maestrosDeOfertaService.remove(id);
   }
+
+  //PARA EL LOGIN
+  @MessagePattern({ cmd: 'find_by_student_id' })
+  async getMaestroDeOfertaByStudentId(@Payload() studentId: string) {
+    return this.maestrosDeOfertaService.findByEstudianteId(studentId);
+  }
 }

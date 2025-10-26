@@ -7,20 +7,28 @@ import { AllExceptionsFilter } from './common/filters/rpc-exception.filter';
 async function bootstrap() {
   const logger = new Logger('Main');
 
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    {
-      transport: Transport.TCP,
-      options: {
-        port: 3001,
-      },
+  // Create hybrid application (HTTP + TCP microservice)
+  const app = await NestFactory.create(AppModule);
+
+  // Add TCP microservice
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.TCP,
+    options: {
+      host: '0.0.0.0',
+      port: 3001,
     },
-  );
+  });
 
   app.useGlobalFilters(new AllExceptionsFilter());
 
-  await app.listen();
+  // Start microservice
+  await app.startAllMicroservices();
 
-  logger.log('Academic Catalog Microservice is running...');
+  // Start HTTP server for health checks on different port
+  const httpPort = process.env.HTTP_PORT || 4001;
+  await app.listen(httpPort);
+
+  logger.log(`Academic Catalog Microservice TCP running on port 3001`);
+  logger.log(`Academic Catalog HTTP health checks on port ${httpPort}`);
 }
 bootstrap();

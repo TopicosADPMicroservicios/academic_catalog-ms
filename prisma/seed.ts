@@ -795,6 +795,94 @@ const ofertaGrupoMateria = [
     grupoMateriaId: 'a1b2c3d4-e5f6-7890-abcd-ef1234567891',
     maestroDeOfertaId: '7a8b9c0d-1e2f-3456-abcd-789012345678',
   },
+  // Nuevas ofertas para grupos existentes y nuevos grupos
+  {
+    id: 'h4i5j6k7-l8m9-0123-8901-234567890123',
+    grupoMateriaId: 'b1c2d3e4-f5a6-7890-abcd-ef1234567891', // INF110 SE
+    maestroDeOfertaId: '80be2bf8-efac-4adc-afcd-36e166fc17f0',
+  },
+  {
+    id: 'i5j6k7l8-m9n0-1234-9012-345678901234',
+    grupoMateriaId: 'c1d2e3f4-g5h6-7890-abcd-ef1234567890', // FIS110 SF
+    maestroDeOfertaId: '8c0e6c3c-39ee-45f9-a32c-13efe6877fb9',
+  },
+  {
+    id: 'j6k7l8m9-n0o1-2345-0123-456789012345',
+    grupoMateriaId: 'd1e2f3g4-h5i6-7890-abcd-ef1234567890', // LIN100 SG
+    maestroDeOfertaId: '9d1f2e3c-4b5a-6789-abcd-ef1234567890',
+  },
+  // Ofertas para los nuevos grupos creados
+  {
+    id: 'o1p2q3r4-s5t6-7890-5678-901234567890',
+    grupoMateriaId: 'e1f2g3h4-i5j6-7890-abcd-ef1234567890', // INF110 SH
+    maestroDeOfertaId: '8c0e6c3c-39ee-45f9-a32c-13efe6877fb9',
+  },
+  {
+    id: 'p2q3r4s5-t6u7-8901-6789-012345678901',
+    grupoMateriaId: 'f2g3h4i5-j6k7-8901-bcde-f12345678901', // FIS110 SI
+    maestroDeOfertaId: '9d1f2e3c-4b5a-6789-abcd-ef1234567890',
+  },
+  {
+    id: 'q3r4s5t6-u7v8-9012-7890-123456789012',
+    grupoMateriaId: 'g3h4i5j6-k7l8-9012-cdef-123456789012', // LIN100 SJ
+    maestroDeOfertaId: '80be2bf8-efac-4adc-afcd-36e166fc17f0',
+  },
+  // Nuevas OfertaGrupoMateria para grupos de segundo semestre
+  // MAT102 grupos SK y SL
+  {
+    id: 'r4s5t6u7-v8w9-x0y1-z2a3-b4c5d6e7f8g9',
+    grupoMateriaId: 'h4i5j6k7-l8m9-n0o1-p2q3-r4s5t6u7v8w9', // MAT102 SK
+    maestroDeOfertaId: '80be2bf8-efac-4adc-afcd-36e166fc17f0', // Bruno
+  },
+  {
+    id: 's5t6u7v8-w9x0-y1z2-a3b4-c5d6e7f8g9h0',
+    grupoMateriaId: 'i5j6k7l8-m9n0-o1p2-q3r4-s5t6u7v8w9x0', // MAT102 SL
+    maestroDeOfertaId: '8c0e6c3c-39ee-45f9-a32c-13efe6877fb9', // Ana
+  },
+  // MAT103 grupos SM y SN
+  {
+    id: 't6u7v8w9-x0y1-z2a3-b4c5-d6e7f8g9h0i1',
+    grupoMateriaId: 'j6k7l8m9-n0o1-p2q3-r4s5-t6u7v8w9x0y1', // MAT103 SM
+    maestroDeOfertaId: '9d1f2e3c-4b5a-6789-abcd-ef1234567890', // Carlos
+  },
+  {
+    id: 'u7v8w9x0-y1z2-a3b4-c5d6-e7f8g9h0i1j2',
+    grupoMateriaId: 'k7l8m9n0-o1p2-q3r4-s5t6-u7v8w9x0y1z2', // MAT103 SN
+    maestroDeOfertaId: '5e6f7a8b-9c0d-1234-efab-567890123456', // Maria
+  },
+  // INF120 grupos SO y SP
+  {
+    id: 'v8w9x0y1-z2a3-b4c5-d6e7-f8g9h0i1j2k3',
+    grupoMateriaId: 'l8m9n0o1-p2q3-r4s5-t6u7-v8w9x0y1z2a3', // INF120 SO
+    maestroDeOfertaId: '6f7a8b9c-0d1e-2345-fabc-678901234567', // Diego
+  },
+  {
+    id: 'w9x0y1z2-a3b4-c5d6-e7f8-g9h0i1j2k3l4',
+    grupoMateriaId: 'm9n0o1p2-q3r4-s5t6-u7v8-w9x0y1z2a3b4', // INF120 SP
+    maestroDeOfertaId: '7a8b9c0d-1e2f-3456-abcd-789012345678', // Valentina
+  },
+  // FIS102 grupos SQ y SR
+  {
+    id: 'x0y1z2a3-b4c5-d6e7-f8g9-h0i1j2k3l4m5',
+    grupoMateriaId: 'n0o1p2q3-r4s5-t6u7-v8w9-x0y1z2a3b4c5', // FIS102 SQ
+    maestroDeOfertaId: '80be2bf8-efac-4adc-afcd-36e166fc17f0', // Bruno
+  },
+  {
+    id: 'y1z2a3b4-c5d6-e7f8-g9h0-i1j2k3l4m5n6',
+    grupoMateriaId: 'o1p2q3r4-s5t6-u7v8-w9x0-y1z2a3b4c5d6', // FIS102 SR
+    maestroDeOfertaId: '8c0e6c3c-39ee-45f9-a32c-13efe6877fb9', // Ana
+  },
+  // LIN101 grupos SS y ST
+  {
+    id: 'z2a3b4c5-d6e7-f8g9-h0i1-j2k3l4m5n6o7',
+    grupoMateriaId: 'p2q3r4s5-t6u7-v8w9-x0y1-z2a3b4c5d6e7', // LIN101 SS
+    maestroDeOfertaId: '9d1f2e3c-4b5a-6789-abcd-ef1234567890', // Carlos
+  },
+  {
+    id: 'a3b4c5d6-e7f8-g9h0-i1j2-k3l4m5n6o7p8',
+    grupoMateriaId: 'q3r4s5t6-u7v8-w9x0-y1z2-a3b4c5d6e7f8', // LIN101 ST
+    maestroDeOfertaId: '5e6f7a8b-9c0d-1234-efab-567890123456', // Maria
+  },
 ];
 
 async function main() {

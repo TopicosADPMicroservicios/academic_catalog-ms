@@ -1,4 +1,5 @@
 import {
+  Inject,
   Injectable,
   NotAcceptableException,
   NotFoundException,
@@ -7,10 +8,16 @@ import { CreateOfertasGrupoMateriaDto } from './dto/create-ofertas-grupo-materia
 import { UpdateOfertasGrupoMateriaDto } from './dto/update-ofertas-grupo-materia.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import { OfertaGrupoMateria } from '@prisma/client';
+import { ClientProxy } from '@nestjs/microservices';
+import { first, firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class OfertasGrupoMateriaService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    @Inject('ACADEMIC_MANAGEMENT_SERVICE')
+    private readonly academicManagementClient: ClientProxy,
+  ) {}
   async create(
     createOfertasGrupoMateriaDto: CreateOfertasGrupoMateriaDto,
   ): Promise<OfertaGrupoMateria> {
@@ -76,16 +83,34 @@ export class OfertasGrupoMateriaService {
     return foundOfertasGrupoMateria;
   }
 
-  async findByMaestroId(
-    maestroDeOfertaId: string,
-  ): Promise<OfertaGrupoMateria[]> {
+  async findByMaestroId(maestroDeOfertaId: string) {
     const foundOfertasGrupoMateria =
       await this.prismaService.ofertaGrupoMateria.findMany({
         where: {
           isActive: true,
           maestroDeOfertaId: maestroDeOfertaId,
+          estaInscrita: false,
+        },
+        select: {
+          id: true,
+          grupoMateriaId: true,
         },
       });
+
+    const getDetalleGrupoMateria = await firstValueFrom(
+      this.academicManagementClient.send(
+        { cmd: 'get_detalle' },
+        foundOfertasGrupoMateria.map((oferta) => oferta.grupoMateriaId),
+      ),
+    );
+
+    foundOfertasGrupoMateria.forEach((oferta) => {
+      const detalle = getDetalleGrupoMateria.find(
+        (detalle: any) => detalle.id === oferta.grupoMateriaId,
+      );
+      (oferta as any)['detalleGrupoMateria'] = detalle;
+    });
+
     if (!foundOfertasGrupoMateria)
       throw new NotFoundException(
         'No se encontraron ofertas grupo materia para la boleta proporcionada',
@@ -93,10 +118,30 @@ export class OfertasGrupoMateriaService {
     return foundOfertasGrupoMateria;
   }
 
-  async marcarInscritas(ofertaId: string[]): Promise<OfertaGrupoMateria[]> {
+  async marcarInscritas(ofertaId: string[]) {
+    //OBTENEMOS PRIMEROS LOS GRUPO MATERIA IDS DE LAS OFERTAS
+    const getGrupoMateriaIdxOferta =
+      await this.prismaService.ofertaGrupoMateria.findMany({
+        where: { id: { in: ofertaId }, isActive: true },
+        select: { grupoMateriaId: true, maestroDeOfertaId: true },
+      });
+
+    //LUEGO VAMOS A BUSCAR LOS ID DE LAS MATERIAS DE ESOS GRUPOS MATERIA Y NOS RETORNA LOS IDS DE LOS OTROS GRUPOS MATERIA QUE COMPARTEN ESA MATERIA
+    const getGruposMateriaIds = await firstValueFrom(
+      this.academicManagementClient.send(
+        { cmd: 'get_materia_ids' },
+        getGrupoMateriaIdxOferta.map((ogm) => ogm.grupoMateriaId),
+      ),
+    );
+
+    //ACTUALIZAMOS LAS OFERTAS GRUPO MATERIA QUE COMPARTEN ESAS MATERIAS Y MAESTRO DE OFERTA
     const updatedOfertaGrupoMateria =
       await this.prismaService.ofertaGrupoMateria.updateMany({
-        where: { id: { in: ofertaId }, isActive: true },
+        where: {
+          grupoMateriaId: { in: getGruposMateriaIds.map((gm: any) => gm.id) },
+          isActive: true,
+          maestroDeOfertaId: getGrupoMateriaIdxOferta[0].maestroDeOfertaId,
+        },
         data: { estaInscrita: true },
       });
     if (updatedOfertaGrupoMateria.count === 0)
@@ -104,11 +149,6 @@ export class OfertasGrupoMateriaService {
         'No se pudieron marcar las ofertas grupo materia como inscritas',
       );
 
-    const ofertasMarcadas =
-      await this.prismaService.ofertaGrupoMateria.findMany({
-        where: { id: { in: ofertaId }, isActive: true },
-      });
-
-    return ofertasMarcadas;
+    return updatedOfertaGrupoMateria;
   }
 }

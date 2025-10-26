@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
@@ -66,5 +67,21 @@ export class MaestrosDeOfertaService {
     if (!deletedMaestroDeOferta)
       throw new NotFoundException('No se pudo eliminar el maestro de oferta');
     return deletedMaestroDeOferta;
+  }
+
+  //PARA EL LOGIN
+  async findByEstudianteId(estudianteId: string): Promise<MaestroDeOferta[]> {
+    Logger.log(
+      `Buscando maestro de oferta para el estudiante con ID: ${estudianteId}`,
+    );
+    const foundMaestroDeOferta =
+      await this.prismaService.maestroDeOferta.findMany({
+        where: { estudianteId: estudianteId, isActive: true },
+      });
+    if (!foundMaestroDeOferta)
+      throw new NotFoundException(
+        'No se encontró el maestro de oferta para el estudiante',
+      );
+    return foundMaestroDeOferta;
   }
 }

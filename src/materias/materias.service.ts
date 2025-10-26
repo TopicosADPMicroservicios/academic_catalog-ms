@@ -55,6 +55,13 @@ export class MateriasService {
   async findAll(grupoMateriaId: string[]): Promise<Materia[]> {
     const foundMaterias = await this.prismaService.materia.findMany({
       where: { isActive: true, id: { in: grupoMateriaId } },
+      include: {
+        nivel: {
+          select: {
+            semestre: true,
+          },
+        },
+      },
     });
     if (!foundMaterias)
       throw new NotFoundException('No se encontraron materias');
