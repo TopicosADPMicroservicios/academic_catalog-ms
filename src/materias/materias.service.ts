@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
@@ -53,6 +54,9 @@ export class MateriasService {
 
   //PARA EL SERVICIO DE INSCRIPCIONES
   async findAll(grupoMateriaId: string[]): Promise<Materia[]> {
+    Logger.log(
+      `Buscando materias para los grupos: ${grupoMateriaId.join(', ')}`,
+    );
     const foundMaterias = await this.prismaService.materia.findMany({
       where: { isActive: true, id: { in: grupoMateriaId } },
       include: {

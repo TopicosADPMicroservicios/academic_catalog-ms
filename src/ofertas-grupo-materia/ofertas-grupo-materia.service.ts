@@ -1,6 +1,7 @@
 import {
   Inject,
   Injectable,
+  Logger,
   NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
@@ -84,6 +85,9 @@ export class OfertasGrupoMateriaService {
   }
 
   async findByMaestroId(maestroDeOfertaId: string) {
+    Logger.log(
+      `Buscando ofertas grupo materia para el maestroDeOfertaId: ${maestroDeOfertaId}`,
+    );
     const foundOfertasGrupoMateria =
       await this.prismaService.ofertaGrupoMateria.findMany({
         where: {
@@ -97,6 +101,11 @@ export class OfertasGrupoMateriaService {
         },
       });
 
+    Logger.log(
+      `Buscando detalles de grupo materia para las ofertas: ${foundOfertasGrupoMateria.map(
+        (oferta) => oferta.id,
+      )}`,
+    );
     const getDetalleGrupoMateria = await firstValueFrom(
       this.academicManagementClient.send(
         { cmd: 'get_detalle' },

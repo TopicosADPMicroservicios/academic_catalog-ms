@@ -1,3 +1,0 @@
-FROM 063219793833.dkr.ecr.sa-east-1.amazonaws.com/academic-catalog-ms:latest
-# Copy the fixed main.js with host 0.0.0.0
-COPY dist/main.js /app/dist/main.js
