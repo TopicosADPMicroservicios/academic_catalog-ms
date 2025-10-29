@@ -65,6 +65,26 @@ export class MateriasService {
             semestre: true,
           },
         },
+        siglaMateria: {
+          select: {
+            materia: {
+              select: {
+                id: true,
+                nombre: true,
+              },
+            },
+          },
+        },
+        siglaPrerequisito: {
+          select: {
+            materia: {
+              select: {
+                id: true,
+                nombre: true,
+              },
+            },
+          },
+        },
       },
     });
     if (!foundMaterias)

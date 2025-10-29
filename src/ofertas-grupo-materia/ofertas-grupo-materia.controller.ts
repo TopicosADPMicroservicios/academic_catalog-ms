@@ -3,6 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { OfertasGrupoMateriaService } from './ofertas-grupo-materia.service';
 import { CreateOfertasGrupoMateriaDto } from './dto/create-ofertas-grupo-materia.dto';
 import { UpdateOfertasGrupoMateriaDto } from './dto/update-ofertas-grupo-materia.dto';
+import { BulkCreateOfgmDto } from './dto/bulk-create-ofgm.dto';
 
 @Controller()
 export class OfertasGrupoMateriaController {
@@ -51,5 +52,11 @@ export class OfertasGrupoMateriaController {
   @MessagePattern({ cmd: 'marcar_inscritas' })
   marcarInscritas(@Payload() ofertaId: string[]) {
     return this.ofertasGrupoMateriaService.marcarInscritas(ofertaId);
+  }
+
+  //GENERAR BULK OFERTA GRUPO MATERIA
+  @MessagePattern({ cmd: 'bulk-create-ofgm' })
+  bulkCreate(@Payload() bulkCreateOfgmDto: BulkCreateOfgmDto) {
+    return this.ofertasGrupoMateriaService.bulkCreate(bulkCreateOfgmDto);
   }
 }

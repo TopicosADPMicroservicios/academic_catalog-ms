@@ -84,4 +84,22 @@ export class MaestrosDeOfertaService {
       );
     return foundMaestroDeOferta;
   }
+
+  //PARA GENERAR OFERTA
+  async findByEstudianteGenerarOferta(
+    estudianteId: string,
+  ): Promise<MaestroDeOferta> {
+    Logger.log(
+      `Buscando maestro de oferta para el estudiante con ID: ${estudianteId}`,
+    );
+    const foundMaestroDeOferta =
+      await this.prismaService.maestroDeOferta.findFirst({
+        where: { estudianteId: estudianteId, isActive: true },
+      });
+    if (!foundMaestroDeOferta)
+      throw new NotFoundException(
+        'No se encontró el maestro de oferta para el estudiante',
+      );
+    return foundMaestroDeOferta;
+  }
 }

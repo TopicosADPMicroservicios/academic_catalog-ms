@@ -43,4 +43,11 @@ export class MaestrosDeOfertaController {
   async getMaestroDeOfertaByStudentId(@Payload() studentId: string) {
     return this.maestrosDeOfertaService.findByEstudianteId(studentId);
   }
+
+  @MessagePattern({ cmd: 'generar_oferta_estudiante_id' })
+  async getMaestroGenerarOferta(@Payload() studentId: string) {
+    return this.maestrosDeOfertaService.findByEstudianteGenerarOferta(
+      studentId,
+    );
+  }
 }

@@ -160,4 +160,41 @@ export class OfertasGrupoMateriaService {
 
     return updatedOfertaGrupoMateria;
   }
+
+  //BULK CREATE PARA OFERTA GRUPO MATERIA
+  async bulkCreate(payload: {
+    grupoMateriaId: string[];
+    maestroDeOfertaId: string;
+  }) {
+    Logger.log(payload);
+    Logger.log(payload.maestroDeOfertaId);
+    const grupoMateriaIds = Array.from(new Set(payload.grupoMateriaId || []));
+    Logger.log(grupoMateriaIds);
+
+    if (grupoMateriaIds.length === 0)
+      throw new NotAcceptableException('No se proporcionaron grupoMateriaId');
+
+    const createData = grupoMateriaIds.map((gm) => ({
+      grupoMateriaId: gm,
+      maestroDeOfertaId: payload.maestroDeOfertaId,
+    }));
+
+    // Use createMany with skipDuplicates to avoid unique constraint errors
+    await this.prismaService.ofertaGrupoMateria.createMany({
+      data: createData,
+      skipDuplicates: true,
+    });
+
+    const foundOfertaGrupoMateria =
+      await this.prismaService.ofertaGrupoMateria.findMany({
+        where: {
+          grupoMateriaId: { in: grupoMateriaIds },
+          maestroDeOfertaId: payload.maestroDeOfertaId,
+        },
+      });
+
+    Logger.log(foundOfertaGrupoMateria);
+
+    return foundOfertaGrupoMateria;
+  }
 }
